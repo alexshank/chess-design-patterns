@@ -1,0 +1,49 @@
+.header {
+
+}
+
+#content {
+
+}
+
+#board-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#board {
+    height: 80vh;
+    width: 80vh;
+    background: yellow;
+    display: flex;
+    flex-direction: column;
+}
+
+.row {
+    display: flex;
+    flex: 1;
+}
+
+.square {
+    background: pink;
+    flex: 1;
+    border: 1px solid black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+}
+
+.black {
+    background: black;
+     color: white;
+}
+
+.white {
+    background: white;
+}
+
+.footer {
+
+}
