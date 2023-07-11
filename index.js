@@ -16,43 +16,28 @@ IMAGE_MAPPINGS = {
     "BP": "images/black_pawn.svg",
 }
 
-const TEST_BOARD = [
-    {
-        "piece": "WC",
-        "row": 0,
-        "col": 0
-    },
-    {
-        "piece": "WN",
-        "row": 0,
-        "col": 1
-    },
-    {
-        "piece": "WB",
-        "row": 0,
-        "col": 2
-    },
-    {
-        "piece": "WQ",
-        "row": 0,
-        "col": 3
-    },
-    {
-        "piece": "WK",
-        "row": 4,
-        "col": 4
-    },
-    {
-        "piece": "BB",
-        "row": 2,
-        "col": 6
-    },
-]
+function getNewGame() {
+    fetch('http://localhost:8080/api/new')
+        .then(function(response) {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error('Request failed with status code ' + response.status);
+            }
+        })
+        .then(function(data) {
+            console.log(data);
+            populateBoard(data.pieces)
+        })
+        .catch(function(error) {
+            console.error('Request failed:', error);
+        });
+}
 
 function populateBoard(boardPositions) {
     boardPositions.forEach(boardPosition => {
         var image = document.createElement('img')
-        image.setAttribute('src', IMAGE_MAPPINGS[boardPosition.piece]);
+        image.setAttribute('src', IMAGE_MAPPINGS[boardPosition.label]);
         square = document.getElementById(`${boardPosition.row}${boardPosition.col}`);
         square.appendChild(image);
     })
@@ -94,10 +79,16 @@ function buildBoard() {
     }
 }
 
+function setupNewGameButton() {
+    var button = document.getElementById("new-game-button");
+    button.addEventListener("click", getNewGame);
+}
+
 function main() {
+    setupNewGameButton();
     buildBoard();
-    populateBoard(TEST_BOARD)
-//    clearBoard()
+//    populateBoard(TEST_BOARD);
+//    clearBoard();
 }
 
 main()
