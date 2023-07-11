@@ -32,12 +32,14 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 24px;
+}
+
+img {
+    width: 100%;
 }
 
 .black {
-    background: black;
-     color: white;
+    background: #449e48;
 }
 
 .white {
