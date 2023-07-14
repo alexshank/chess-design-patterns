@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 // TODO should implement a generic GameLogicService interface
 @Service
@@ -22,14 +23,17 @@ public class ChessLogicService {
     public ChessGame getCandidateMoves(int row, int col) {
         // do nothing if a vacant square is clicked on
         if(chessGame.checkVacantSquare(new Coordinate(row, col))){
-            return chessGame;
-        }
-        // deselect if this is the second click on the square
-        else if(chessGame.getSelected() != null && chessGame.getSelected().getRow() == row && chessGame.getSelected().getCol() == col){
             chessGame.setSelected(null);
             chessGame.setHighlights(new ArrayList<>());
-        }else{
-            chessGame.setHighlights(Arrays.asList(new Coordinate(5, 5)));
+        }
+        // deselect if this is the second click on the square
+        // TODO should create proper equality override
+        else if(chessGame.getSelected() != null && chessGame.getSelected().getRow() == row && chessGame.getSelected().getCol() == col) {
+            chessGame.setSelected(null);
+            chessGame.setHighlights(new ArrayList<>());
+        } else {
+            List<Coordinate> highlights = chessGame.getPotentialMoves(new Coordinate(row, col));
+            chessGame.setHighlights(highlights);
             chessGame.setSelected(new Coordinate(row, col));
         }
 
