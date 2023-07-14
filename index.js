@@ -25,29 +25,79 @@ function getNewGame() {
                 throw new Error('Request failed with status code ' + response.status);
             }
         })
-        .then(function(data) {
-            console.log(data);
+        .then(function(board) {
+            console.log(board);
             clearBoard();
-            populateBoard(data.pieces);
+            populateBoard(board);
         })
         .catch(function(error) {
             console.error('Request failed:', error);
         });
 }
 
-function populateBoard(boardPositions) {
-    boardPositions.forEach(boardPosition => {
+function getCandidateMoves(squareId) {
+    row = squareId[0];
+    col = squareId[1];
+
+    fetch(`http://localhost:8080/api/candidates?row=${row}&col=${col}`)
+        .then(function(response) {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error('Request failed with status code ' + response.status);
+            }
+        })
+        .then(function(board) {
+            console.log(board);
+            clearBoard();
+            populateBoard(board);
+        })
+        .catch(function(error) {
+            console.error('Request failed:', error);
+        });
+}
+
+function populateBoard(board) {
+    // piece images
+    board.pieces.forEach(boardPosition => {
         var image = document.createElement('img')
         image.setAttribute('src', IMAGE_MAPPINGS[boardPosition.label]);
-        square = document.getElementById(`${boardPosition.row}${boardPosition.col}`);
+        const square = document.getElementById(`${boardPosition.row}${boardPosition.col}`);
         square.appendChild(image);
     })
+
+    // move candidates
+    if(board.highlights){
+        board.highlights.forEach(highlight => {
+            const square = document.getElementById(`${highlight.row}${highlight.col}`);
+            square.classList.remove('black');
+            square.classList.remove('white');
+            square.classList.add('highlight');
+        })
+    }
+
+    // selected square
+    if(board.selected){
+        const selectedId = `${board.selected.row}${board.selected.col}`;
+        const square = document.getElementById(selectedId);
+        square.classList.remove('black');
+        square.classList.remove('white');
+        square.classList.add('selected');
+    }
 }
 
 function clearBoard() {
     for (var row = 0; row < ROWS; row++) {
         for (var col = 0; col < COLS; col++) {
             var square = document.getElementById(`${row}${col}`);
+            square.classList.remove('black');
+            square.classList.remove('white');
+            square.classList.remove('highlight');
+            square.classList.remove('selected');
+            var colorClass = ((row % 2) + col) % 2 == 1 ? 'black' : 'white';
+            square.classList.add(colorClass);
+
+            // remove piece image
             if (square.firstChild) {
                 square.removeChild(square.lastChild);
             }
@@ -72,6 +122,9 @@ function buildBoard() {
                     ? event.target
                     : event.target.parentElement;
                 console.log(targetElement);
+                console.log(targetElement.id);
+                getCandidateMoves(targetElement.id);
+
             });
 
             newRow.appendChild(newCol)

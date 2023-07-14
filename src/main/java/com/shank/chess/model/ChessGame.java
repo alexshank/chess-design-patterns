@@ -8,6 +8,8 @@ import java.util.List;
 public class ChessGame {
 
     private List<ChessPiece> pieces;
+    private List<Coordinate> highlights;
+    private Coordinate selected;
 
     public ChessGame() {
         this.pieces = new ArrayList<>(
@@ -50,11 +52,37 @@ public class ChessGame {
         );
     }
 
+    public Coordinate getSelected() {
+        return selected;
+    }
+
+    public void setSelected(Coordinate selected) {
+        this.selected = selected;
+    }
+
     public List<ChessPiece> getPieces() {
         return pieces;
     }
 
     public void setPieces(List<ChessPiece> pieces) {
         this.pieces = pieces;
+    }
+
+    public List<Coordinate> getHighlights() {
+        return highlights;
+    }
+
+    public void setHighlights(List<Coordinate> highlights) {
+        this.highlights = highlights;
+    }
+
+    public boolean checkVacantSquare(Coordinate coord) {
+        // TODO This is the iterator pattern
+        for(ChessPiece piece : this.pieces){
+            if(piece.getRow() == coord.getRow() && piece.getCol() == coord.getCol()){
+                return false;
+            }
+        }
+        return true;
     }
 }

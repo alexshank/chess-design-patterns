@@ -3,10 +3,7 @@ package com.shank.chess.controller;
 import com.shank.chess.model.ChessGame;
 import com.shank.chess.service.ChessLogicService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -24,5 +21,10 @@ public class ChessController {
     @GetMapping("/new")
     public ChessGame newGame() {
         return chessLogicService.getNewGame();
+    }
+
+    @GetMapping("/candidates")
+    public ChessGame newGame(@RequestParam int row, @RequestParam int col) {
+        return chessLogicService.getCandidateMoves(row, col);
     }
 }
