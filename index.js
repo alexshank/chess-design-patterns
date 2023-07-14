@@ -27,7 +27,8 @@ function getNewGame() {
         })
         .then(function(data) {
             console.log(data);
-            populateBoard(data.pieces)
+            clearBoard();
+            populateBoard(data.pieces);
         })
         .catch(function(error) {
             console.error('Request failed:', error);
@@ -80,15 +81,13 @@ function buildBoard() {
 }
 
 function setupNewGameButton() {
-    var button = document.getElementById("new-game-button");
-    button.addEventListener("click", getNewGame);
+    var chessButton = document.getElementById("chess-button");
+    chessButton.addEventListener("click", getNewGame);
 }
 
 function main() {
     setupNewGameButton();
     buildBoard();
-//    populateBoard(TEST_BOARD);
-//    clearBoard();
 }
 
 main()
