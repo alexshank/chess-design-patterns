@@ -13,7 +13,7 @@ import java.util.Optional;
 public class ChessLogicService {
 
     // TODO can demonstrate the singleton pattern here
-    private ChessGame chessGame;
+    private ChessGame chessGame = new ChessGame();
 
     public ChessGame getNewGame() {
         chessGame = new ChessGame();
@@ -45,5 +45,9 @@ public class ChessLogicService {
         }
 
         return chessGame;
+    }
+
+    public ChessGame getCurrentGame() {
+        return this.chessGame;
     }
 }

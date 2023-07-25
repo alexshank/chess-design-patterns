@@ -1,6 +1,6 @@
 package com.shank.chess.model;
 
-import com.shank.chess.model.strategy.PawnMoveCalculator;
+import com.shank.chess.model.strategy.*;
 import com.shank.chess.observer.ChessMovePublisher;
 
 import java.util.*;
@@ -19,28 +19,30 @@ public class ChessGame {
         this.selectedCoordinate = Optional.empty();
         this.movePublisher = new ChessMovePublisher();
 
+        // TODO this is probably prime use case for abstract factory
         // starting positions for a game of chess
-        this.pieces.put(new Coordinate(0, 0), new ChessPiece("WC", new PawnMoveCalculator(true)));
-        this.pieces.put(new Coordinate(0, 1), new ChessPiece("WN", new PawnMoveCalculator(true)));
-        this.pieces.put(new Coordinate(0, 2), new ChessPiece("WB", new PawnMoveCalculator(true)));
-        this.pieces.put(new Coordinate(0, 3), new ChessPiece("WQ", new PawnMoveCalculator(true)));
-        this.pieces.put(new Coordinate(0, 4), new ChessPiece("WK", new PawnMoveCalculator(true)));
-        this.pieces.put(new Coordinate(0, 5), new ChessPiece("WB", new PawnMoveCalculator(true)));
-        this.pieces.put(new Coordinate(0, 6), new ChessPiece("WN", new PawnMoveCalculator(true)));
-        this.pieces.put(new Coordinate(0, 7), new ChessPiece("WC", new PawnMoveCalculator(true)));
-        this.pieces.put(new Coordinate(7, 0), new ChessPiece("BC", new PawnMoveCalculator(false)));
-        this.pieces.put(new Coordinate(7, 1), new ChessPiece("BN", new PawnMoveCalculator(false)));
-        this.pieces.put(new Coordinate(7, 2), new ChessPiece("BB", new PawnMoveCalculator(false)));
-        this.pieces.put(new Coordinate(7, 3), new ChessPiece("BQ", new PawnMoveCalculator(false)));
-        this.pieces.put(new Coordinate(7, 4), new ChessPiece("BK", new PawnMoveCalculator(false)));
-        this.pieces.put(new Coordinate(7, 5), new ChessPiece("BB", new PawnMoveCalculator(false)));
-        this.pieces.put(new Coordinate(7, 6), new ChessPiece("BN", new PawnMoveCalculator(false)));
-        this.pieces.put(new Coordinate(7, 7), new ChessPiece("BC", new PawnMoveCalculator(false)));
+        this.pieces.put(new Coordinate(0, 0), new ChessPiece("WC", new CastleMoveCalculator()));
+        this.pieces.put(new Coordinate(0, 1), new ChessPiece("WN", new KnightMoveCalculator()));
+        this.pieces.put(new Coordinate(0, 2), new ChessPiece("WB", new BishopMoveCalculator()));
+        this.pieces.put(new Coordinate(0, 3), new ChessPiece("WQ", new QueenMoveCalculator()));
+        this.pieces.put(new Coordinate(0, 4), new ChessPiece("WK", new KingMoveCalculator()));
+        this.pieces.put(new Coordinate(0, 5), new ChessPiece("WB", new BishopMoveCalculator()));
+        this.pieces.put(new Coordinate(0, 6), new ChessPiece("WN", new KnightMoveCalculator()));
+        this.pieces.put(new Coordinate(0, 7), new ChessPiece("WC", new CastleMoveCalculator()));
+        this.pieces.put(new Coordinate(7, 0), new ChessPiece("BC", new CastleMoveCalculator()));
+        this.pieces.put(new Coordinate(7, 1), new ChessPiece("BN", new KnightMoveCalculator()));
+        this.pieces.put(new Coordinate(7, 2), new ChessPiece("BB", new BishopMoveCalculator()));
+        this.pieces.put(new Coordinate(7, 3), new ChessPiece("BQ", new QueenMoveCalculator()));
+        this.pieces.put(new Coordinate(7, 4), new ChessPiece("BK", new KingMoveCalculator()));
+        this.pieces.put(new Coordinate(7, 5), new ChessPiece("BB", new BishopMoveCalculator()));
+        this.pieces.put(new Coordinate(7, 6), new ChessPiece("BN", new KnightMoveCalculator()));
+        this.pieces.put(new Coordinate(7, 7), new ChessPiece("BC", new CastleMoveCalculator()));
         // pawns
         this.pieces.put(new Coordinate(1, 0), new ChessPiece("WP", new PawnMoveCalculator(true)));
         this.pieces.put(new Coordinate(1, 1), new ChessPiece("WP", new PawnMoveCalculator(true)));
         this.pieces.put(new Coordinate(1, 2), new ChessPiece("WP", new PawnMoveCalculator(true)));
         this.pieces.put(new Coordinate(1, 3), new ChessPiece("WP", new PawnMoveCalculator(true)));
+        // TODO refactor to build subscriptions better (probably in the abstract factory)
         PawnMoveCalculator tempMoveCalculator = new PawnMoveCalculator(true);
         this.movePublisher.subscribe(tempMoveCalculator);
         this.pieces.put(new Coordinate(1, 4), new ChessPiece("WP", tempMoveCalculator));
@@ -59,10 +61,6 @@ public class ChessGame {
 
     public Map<Coordinate, ChessPiece> getPieces() {
         return pieces;
-    }
-
-    public void setPieces(Map<Coordinate, ChessPiece> pieces) {
-        this.pieces = pieces;
     }
 
     public List<Coordinate> getHighlights() {
@@ -101,5 +99,10 @@ public class ChessGame {
 
         // publish event saying a piece was moved
         this.movePublisher.notifySubscribers(movingPiece.getMoveCalculator());
+
+        // TODO should check for game end checkmate
+
+        // TODO should handle check against king
+
     }
 }

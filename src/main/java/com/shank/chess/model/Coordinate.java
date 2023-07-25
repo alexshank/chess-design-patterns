@@ -39,4 +39,9 @@ public class Coordinate {
     public boolean isWithinBoard(){
         return this.row < ROW_COUNT && this.row >= 0 && this.col < COL_COUNT && this.col >= 0;
     }
+
+    // TODO this is the prototype creational pattern
+    public Coordinate copy() {
+        return new Coordinate(this.row, this.col);
+    }
 }

@@ -28,4 +28,9 @@ public class ChessController {
     public GameDTO candidates(@RequestParam int row, @RequestParam int col) {
         return new GameDTO(chessLogicService.handleBoardSquareClick(new Coordinate(row, col)));
     }
+
+    @GetMapping("/refresh")
+    public GameDTO refresh() {
+        return new GameDTO(chessLogicService.getCurrentGame());
+    }
 }

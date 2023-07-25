@@ -35,6 +35,25 @@ function getNewGame() {
         });
 }
 
+function getCurrentGame() {
+    fetch('http://localhost:8080/api/refresh')
+        .then(function(response) {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error('Request failed with status code ' + response.status);
+            }
+        })
+        .then(function(board) {
+            console.log(board);
+            clearBoard();
+            populateBoard(board);
+        })
+        .catch(function(error) {
+            console.error('Request failed:', error);
+        });
+}
+
 function getCandidateMoves(squareId) {
     row = squareId[0];
     col = squareId[1];
@@ -121,8 +140,6 @@ function buildBoard() {
                 var targetElement = event.target.nodeName === "DIV"
                     ? event.target
                     : event.target.parentElement;
-                console.log(targetElement);
-                console.log(targetElement.id);
                 getCandidateMoves(targetElement.id);
 
             });
@@ -138,8 +155,14 @@ function setupNewGameButton() {
     chessButton.addEventListener("click", getNewGame);
 }
 
+function setupRefreshGameButton() {
+    var chessButton = document.getElementById("refresh-button");
+    chessButton.addEventListener("click", getCurrentGame);
+}
+
 function main() {
     setupNewGameButton();
+    setupRefreshGameButton()
     buildBoard();
 }
 
