@@ -39,7 +39,7 @@ function getCandidateMoves(squareId) {
     row = squareId[0];
     col = squareId[1];
 
-    fetch(`http://localhost:8080/api/candidates?row=${row}&col=${col}`)
+    fetch(`http://localhost:8080/api/square?row=${row}&col=${col}`)
         .then(function(response) {
             if (response.ok) {
                 return response.json();

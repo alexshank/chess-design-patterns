@@ -1,11 +1,10 @@
 package com.shank.chess.model;
 
-import java.util.List;
-import java.util.Map;
+import com.shank.chess.model.strategy.MoveCalculator;
 
 public class ChessPiece {
     private String label;
-    // TODO this is the composite pattern, alternative to inheritance
+    // TODO this is the strategy pattern, a form a composition which is an alternative to inheritance
     private MoveCalculator moveCalculator;
     private boolean isWhitePiece;
 
@@ -31,16 +30,7 @@ public class ChessPiece {
         this.label = label;
     }
 
-
     public boolean isWhitePiece() {
         return isWhitePiece;
-    }
-
-    public void setWhitePiece(boolean whitePiece) {
-        isWhitePiece = whitePiece;
-    }
-
-    public List<Coordinate> getCandidateMoves(Coordinate selected, Map<Coordinate, ChessPiece> pieces) {
-        return this.moveCalculator.calculateMoves(selected, pieces);
     }
 }

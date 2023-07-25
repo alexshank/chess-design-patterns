@@ -1,6 +1,5 @@
 package com.shank.chess.controller;
 
-import com.shank.chess.model.ChessGame;
 import com.shank.chess.model.Coordinate;
 import com.shank.chess.model.dto.GameDTO;
 import com.shank.chess.service.ChessLogicService;
@@ -25,10 +24,8 @@ public class ChessController {
         return new GameDTO(chessLogicService.getNewGame());
     }
 
-    @GetMapping("/candidates")
+    @GetMapping("/square")
     public GameDTO candidates(@RequestParam int row, @RequestParam int col) {
-        return new GameDTO(chessLogicService.getCandidateMoves(new Coordinate(row, col)));
+        return new GameDTO(chessLogicService.handleBoardSquareClick(new Coordinate(row, col)));
     }
-
-
 }

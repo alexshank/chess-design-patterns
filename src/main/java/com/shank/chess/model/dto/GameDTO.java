@@ -13,7 +13,7 @@ public class GameDTO {
 
     public GameDTO(ChessGame chessGame) {
         this.highlights = chessGame.getHighlights();
-        this.selected = chessGame.getSelected().orElseGet(() -> null);
+        this.selected = chessGame.getSelectedCoordinate().orElseGet(() -> null);
         // TODO is this best way? Maybe mappers?
         this.pieces = chessGame.getPieces().entrySet().stream()
                 .map(entry -> new PieceDTO(entry.getValue().getLabel(), entry.getKey().getRow(), entry.getKey().getCol()))

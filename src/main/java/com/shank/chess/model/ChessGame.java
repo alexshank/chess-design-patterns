@@ -1,6 +1,7 @@
 package com.shank.chess.model;
 
-import com.shank.chess.model.moveCalculator.PawnMoveCalculator;
+import com.shank.chess.model.strategy.PawnMoveCalculator;
+import com.shank.chess.observer.ChessMovePublisher;
 
 import java.util.*;
 
@@ -9,12 +10,14 @@ public class ChessGame {
 
     private Map<Coordinate, ChessPiece> pieces;
     private List<Coordinate> highlights;
-    private Optional<Coordinate> selected;
+    private Optional<Coordinate> selectedCoordinate;
+    private ChessMovePublisher movePublisher;
 
     public ChessGame() {
         this.pieces = new HashMap<>();
         this.highlights = new ArrayList<>();
-        this.selected = Optional.empty();
+        this.selectedCoordinate = Optional.empty();
+        this.movePublisher = new ChessMovePublisher();
 
         // starting positions for a game of chess
         this.pieces.put(new Coordinate(0, 0), new ChessPiece("WC", new PawnMoveCalculator(true)));
@@ -38,7 +41,9 @@ public class ChessGame {
         this.pieces.put(new Coordinate(1, 1), new ChessPiece("WP", new PawnMoveCalculator(true)));
         this.pieces.put(new Coordinate(1, 2), new ChessPiece("WP", new PawnMoveCalculator(true)));
         this.pieces.put(new Coordinate(1, 3), new ChessPiece("WP", new PawnMoveCalculator(true)));
-        this.pieces.put(new Coordinate(1, 4), new ChessPiece("WP", new PawnMoveCalculator(true)));
+        PawnMoveCalculator tempMoveCalculator = new PawnMoveCalculator(true);
+        this.movePublisher.subscribe(tempMoveCalculator);
+        this.pieces.put(new Coordinate(1, 4), new ChessPiece("WP", tempMoveCalculator));
         this.pieces.put(new Coordinate(1, 5), new ChessPiece("WP", new PawnMoveCalculator(true)));
         this.pieces.put(new Coordinate(1, 6), new ChessPiece("WP", new PawnMoveCalculator(true)));
         this.pieces.put(new Coordinate(1, 7), new ChessPiece("WP", new PawnMoveCalculator(true)));
@@ -64,12 +69,12 @@ public class ChessGame {
         return highlights;
     }
 
-    public Optional<Coordinate> getSelected() {
-        return selected;
+    public Optional<Coordinate> getSelectedCoordinate() {
+        return selectedCoordinate;
     }
 
-    public void setSelected(Optional<Coordinate> selected) {
-        this.selected = selected;
+    public void setSelectedCoordinate(Optional<Coordinate> selectedCoordinate) {
+        this.selectedCoordinate = selectedCoordinate;
     }
 
     public void setHighlights(List<Coordinate> highlights) {
@@ -85,5 +90,16 @@ public class ChessGame {
                 .map(ChessPiece::getMoveCalculator)
                 .map(moveCalculator -> moveCalculator.calculateMoves(selectedCoordinate, this.pieces))
                 .orElseGet(() -> Collections.emptyList());
+    }
+
+    public void movePiece(Coordinate start, Coordinate end){
+        // perform movement
+        ChessPiece movingPiece = this.getPieces().get(start);
+        this.getPieces().remove(start);
+        this.getPieces().remove(end);
+        this.getPieces().put(end, movingPiece);
+
+        // publish event saying a piece was moved
+        this.movePublisher.notifySubscribers(movingPiece.getMoveCalculator());
     }
 }

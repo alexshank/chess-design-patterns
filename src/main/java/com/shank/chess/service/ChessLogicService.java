@@ -20,22 +20,28 @@ public class ChessLogicService {
         return chessGame;
     }
 
-    public ChessGame getCandidateMoves(Coordinate coordinate) {
-        // do nothing if a vacant square is clicked on
-        if(chessGame.isVacantSquare(coordinate)){
-            chessGame.setSelected(Optional.empty());
+    public ChessGame handleBoardSquareClick(Coordinate coordinate) {
+        // deselect if it has been clicked on twice
+        if(chessGame.getSelectedCoordinate().isPresent() && chessGame.getSelectedCoordinate().get().equals(coordinate)) {
+            chessGame.setSelectedCoordinate(Optional.empty());
             chessGame.setHighlights(new ArrayList<>());
         }
-        // deselect if this is the second click on the square
-        else if(chessGame.getSelected().isPresent() && chessGame.getSelected().get().equals(coordinate)) {
-            chessGame.setSelected(Optional.empty());
+        // if clicking on a highlighted square, execute a move
+        else if(chessGame.getSelectedCoordinate().isPresent() && chessGame.getHighlights().contains(coordinate)){
+            chessGame.movePiece(chessGame.getSelectedCoordinate().get(), coordinate);
+            chessGame.setSelectedCoordinate(Optional.empty());
             chessGame.setHighlights(new ArrayList<>());
         }
-        // there may actually be potential moves
+        // clear selected piece if a vacant square is clicked on
+        else if(chessGame.isVacantSquare(coordinate)){
+            chessGame.setSelectedCoordinate(Optional.empty());
+            chessGame.setHighlights(new ArrayList<>());
+        }
+        // highlight potential moves for a newly selected piece
         else {
+            chessGame.setSelectedCoordinate(Optional.of(coordinate));
             List<Coordinate> highlights = chessGame.getPotentialMoves(coordinate);
             chessGame.setHighlights(highlights);
-            chessGame.setSelected(Optional.of(coordinate));
         }
 
         return chessGame;

@@ -1,8 +1,8 @@
-package com.shank.chess.model.moveCalculator;
+package com.shank.chess.model.strategy;
 
 import com.shank.chess.model.ChessPiece;
 import com.shank.chess.model.Coordinate;
-import com.shank.chess.model.MoveCalculator;
+import com.shank.chess.model.observer.ISubscriber;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class PawnMoveCalculator implements MoveCalculator {
+public class PawnMoveCalculator implements MoveCalculator, ISubscriber<MoveCalculator> {
 
     // TODO we don't have to store this property in our base classes
     // TODO which is one benefit of composition over inheritance
@@ -34,5 +34,14 @@ public class PawnMoveCalculator implements MoveCalculator {
             calculatedMoves.add(new Coordinate(coordinate.getRow() + 2 * additive, coordinate.getCol()));
         }
         return calculatedMoves.stream().filter(Coordinate::isWithinBoard).collect(Collectors.toList());
+    }
+
+    @Override
+    public void update(MoveCalculator event) {
+        // if we get an event containing this exact move calculator (reference equality),
+        // then we know the piece "this" calculator is for has been moved
+        if(event == this){
+            this.firstMoveMade = true;
+        }
     }
 }
