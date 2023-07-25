@@ -1,6 +1,8 @@
 package com.shank.chess.controller;
 
 import com.shank.chess.model.ChessGame;
+import com.shank.chess.model.Coordinate;
+import com.shank.chess.model.dto.GameDTO;
 import com.shank.chess.service.ChessLogicService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -19,12 +21,14 @@ public class ChessController {
     }
 
     @GetMapping("/new")
-    public ChessGame newGame() {
-        return chessLogicService.getNewGame();
+    public GameDTO newGame() {
+        return new GameDTO(chessLogicService.getNewGame());
     }
 
     @GetMapping("/candidates")
-    public ChessGame newGame(@RequestParam int row, @RequestParam int col) {
-        return chessLogicService.getCandidateMoves(row, col);
+    public GameDTO candidates(@RequestParam int row, @RequestParam int col) {
+        return new GameDTO(chessLogicService.getCandidateMoves(new Coordinate(row, col)));
     }
+
+
 }

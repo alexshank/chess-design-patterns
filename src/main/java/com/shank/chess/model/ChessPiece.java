@@ -1,35 +1,26 @@
 package com.shank.chess.model;
 
 import java.util.List;
+import java.util.Map;
 
 public class ChessPiece {
-    private int row;
-    private int col;
     private String label;
     // TODO this is the composite pattern, alternative to inheritance
     private MoveCalculator moveCalculator;
+    private boolean isWhitePiece;
 
-    public ChessPiece(int row, int col, String label, MoveCalculator moveCalculator) {
-        this.row = row;
-        this.col = col;
+    public ChessPiece(String label, MoveCalculator moveCalculator) {
+        this.isWhitePiece = label.charAt(0) == 'W';
         this.label = label;
         this.moveCalculator = moveCalculator;
     }
 
-    public int getRow() {
-        return row;
+    public MoveCalculator getMoveCalculator() {
+        return moveCalculator;
     }
 
-    public void setRow(int row) {
-        this.row = row;
-    }
-
-    public int getCol() {
-        return col;
-    }
-
-    public void setCol(int col) {
-        this.col = col;
+    public void setMoveCalculator(MoveCalculator moveCalculator) {
+        this.moveCalculator = moveCalculator;
     }
 
     public String getLabel() {
@@ -40,7 +31,16 @@ public class ChessPiece {
         this.label = label;
     }
 
-    public List<Coordinate> getCandidateMoves(List<ChessPiece> pieces) {
-        return this.moveCalculator.calculateMoves(new Coordinate(this.row, this.col), pieces);
+
+    public boolean isWhitePiece() {
+        return isWhitePiece;
+    }
+
+    public void setWhitePiece(boolean whitePiece) {
+        isWhitePiece = whitePiece;
+    }
+
+    public List<Coordinate> getCandidateMoves(Coordinate selected, Map<Coordinate, ChessPiece> pieces) {
+        return this.moveCalculator.calculateMoves(selected, pieces);
     }
 }
