@@ -103,6 +103,10 @@ function populateBoard(board) {
         square.classList.remove('white');
         square.classList.add('selected');
     }
+
+    // turn indicator
+    const span = document.getElementById('turn-indicator');
+    span.textContent = `${board.whiteToMove ? 'White' : 'Black'} to move!`;
 }
 
 function clearBoard() {

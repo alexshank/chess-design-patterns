@@ -20,6 +20,11 @@ public final class ChessLogicService {
     }
 
     public ChessGame handleBoardSquareClick(Coordinate coordinate) {
+        // do nothing if a piece that cannot be moved (not its turn) is clicked
+        if(chessGame.getPieces().get(coordinate) != null && chessGame.getPieces().get(coordinate).isWhitePiece() != chessGame.isWhiteToMove()) {
+            return chessGame;
+        }
+
         // deselect if it has been clicked on twice
         if(chessGame.getSelectedCoordinate().isPresent() && chessGame.getSelectedCoordinate().get().equals(coordinate)) {
             chessGame.setSelectedCoordinate(Optional.empty());
@@ -30,6 +35,7 @@ public final class ChessLogicService {
             chessGame.movePiece(chessGame.getSelectedCoordinate().get(), coordinate);
             chessGame.setSelectedCoordinate(Optional.empty());
             chessGame.setHighlights(new ArrayList<>());
+            chessGame.setWhiteToMove(!chessGame.isWhiteToMove());
         }
         // clear selected piece if a vacant square is clicked on
         else if(chessGame.isVacantSquare(coordinate)){

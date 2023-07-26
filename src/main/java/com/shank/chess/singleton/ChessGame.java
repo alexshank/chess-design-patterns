@@ -17,6 +17,7 @@ public final class ChessGame {
     private Map<Coordinate, ChessPiece> pieces;
     private List<Coordinate> highlights;
     private Optional<Coordinate> selectedCoordinate;
+    private boolean whiteToMove;
 
     // TODO we hold a publisher object to orchestrate events to subscribers
     private ChessMovePublisher movePublisher;
@@ -30,6 +31,7 @@ public final class ChessGame {
         this.highlights = new ArrayList<>();
         this.selectedCoordinate = Optional.empty();
         this.movePublisher = new ChessMovePublisher();
+        this.whiteToMove = true;
 
         // TODO this is probably prime use case for abstract factory
         // starting positions for a game of chess
@@ -86,6 +88,14 @@ public final class ChessGame {
 
     public void resetGame(){
         instance.initializeGame();
+    }
+
+    public boolean isWhiteToMove() {
+        return whiteToMove;
+    }
+
+    public void setWhiteToMove(boolean whiteToMove) {
+        this.whiteToMove = whiteToMove;
     }
 
     public Map<Coordinate, ChessPiece> getPieces() {
