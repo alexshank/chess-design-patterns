@@ -1,4 +1,4 @@
-package com.shank.chess.model.strategy;
+package com.shank.chess.strategy;
 
 import com.shank.chess.model.ChessPiece;
 import com.shank.chess.model.Coordinate;
@@ -12,7 +12,7 @@ public class KnightMoveCalculator extends MoveCalculator {
 
     // TODO should clean up this logic
     @Override
-    public List<Coordinate> calculateMoves(Coordinate coordinate, Map<Coordinate, ChessPiece> pieces) {
+    public List<Coordinate> calculatePotentialMoves(Coordinate coordinate, Map<Coordinate, ChessPiece> pieces) {
         List<Coordinate> calculatedMoves = new ArrayList();
 
         // offsets from current position

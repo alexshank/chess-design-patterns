@@ -1,4 +1,4 @@
-package com.shank.chess.model.observer;
+package com.shank.chess.observer;
 
 public interface ISubscriber<T> {
     void update(T event);

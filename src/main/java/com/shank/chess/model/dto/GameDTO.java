@@ -1,6 +1,6 @@
 package com.shank.chess.model.dto;
 
-import com.shank.chess.model.ChessGame;
+import com.shank.chess.singleton.ChessGame;
 import com.shank.chess.model.Coordinate;
 
 import java.util.List;

@@ -1,8 +1,6 @@
 package com.shank.chess.observer;
 
-import com.shank.chess.model.strategy.MoveCalculator;
-import com.shank.chess.model.observer.IPublisher;
-import com.shank.chess.model.observer.ISubscriber;
+import com.shank.chess.strategy.MoveCalculator;
 
 import java.util.ArrayList;
 import java.util.List;

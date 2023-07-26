@@ -1,10 +1,10 @@
 package com.shank.chess.model;
 
-import com.shank.chess.model.strategy.MoveCalculator;
+import com.shank.chess.strategy.MoveCalculator;
 
 public class ChessPiece {
     private String label;
-    // TODO this is the strategy pattern, a form a composition which is an alternative to inheritance
+    // TODO this is the strategy pattern. A form a composition, which is an alternative to inheritance
     private MoveCalculator moveCalculator;
     private boolean isWhitePiece;
 

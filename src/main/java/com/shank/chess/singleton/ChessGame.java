@@ -1,19 +1,25 @@
-package com.shank.chess.model;
+package com.shank.chess.singleton;
 
-import com.shank.chess.model.strategy.*;
+import com.shank.chess.model.ChessPiece;
+import com.shank.chess.model.Coordinate;
 import com.shank.chess.observer.ChessMovePublisher;
+import com.shank.chess.strategy.*;
 
 import java.util.*;
 
 // TODO could demo builder pattern with this class
-public class ChessGame {
+public final class ChessGame {
+
+    // TODO this is the singleton pattern
+    // TODO this is a naive implementation that is NOT thread safe
+    private static ChessGame instance;
 
     private Map<Coordinate, ChessPiece> pieces;
     private List<Coordinate> highlights;
     private Optional<Coordinate> selectedCoordinate;
     private ChessMovePublisher movePublisher;
 
-    public ChessGame() {
+    private ChessGame() {
         this.pieces = new HashMap<>();
         this.highlights = new ArrayList<>();
         this.selectedCoordinate = Optional.empty();
@@ -59,6 +65,19 @@ public class ChessGame {
         this.pieces.put(new Coordinate(6, 7), new ChessPiece("BP", new PawnMoveCalculator(false)));
     }
 
+    // TODO consistent access to a single instance of this class
+    public static ChessGame getInstance(){
+        if(instance == null){
+            instance = new ChessGame();
+        }
+        return instance;
+    }
+
+    // TODO this is quick and improper way to reset the singleton
+    public void resetGame(){
+        instance = null;
+    }
+
     public Map<Coordinate, ChessPiece> getPieces() {
         return pieces;
     }
@@ -86,7 +105,7 @@ public class ChessGame {
     public List<Coordinate> getPotentialMoves(Coordinate selectedCoordinate) {
         return Optional.ofNullable(pieces.get(selectedCoordinate))
                 .map(ChessPiece::getMoveCalculator)
-                .map(moveCalculator -> moveCalculator.calculateMoves(selectedCoordinate, this.pieces))
+                .map(moveCalculator -> moveCalculator.calculatePotentialMoves(selectedCoordinate, this.pieces))
                 .orElseGet(() -> Collections.emptyList());
     }
 
@@ -103,6 +122,5 @@ public class ChessGame {
         // TODO should check for game end checkmate
 
         // TODO should handle check against king
-
     }
 }

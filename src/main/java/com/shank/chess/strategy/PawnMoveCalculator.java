@@ -1,8 +1,8 @@
-package com.shank.chess.model.strategy;
+package com.shank.chess.strategy;
 
 import com.shank.chess.model.ChessPiece;
 import com.shank.chess.model.Coordinate;
-import com.shank.chess.model.observer.ISubscriber;
+import com.shank.chess.observer.ISubscriber;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +26,7 @@ public class PawnMoveCalculator extends MoveCalculator implements ISubscriber<Mo
 
     // TODO should clean up this logic
     @Override
-    public List<Coordinate> calculateMoves(Coordinate coordinate, Map<Coordinate, ChessPiece> pieces) {
+    public List<Coordinate> calculatePotentialMoves(Coordinate coordinate, Map<Coordinate, ChessPiece> pieces) {
         int additive = willMoveUpwards ? 1 : -1;
         List<Coordinate> calculatedMoves = new ArrayList();
 

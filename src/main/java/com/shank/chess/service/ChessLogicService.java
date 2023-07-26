@@ -1,6 +1,6 @@
 package com.shank.chess.service;
 
-import com.shank.chess.model.ChessGame;
+import com.shank.chess.singleton.ChessGame;
 import com.shank.chess.model.Coordinate;
 import org.springframework.stereotype.Service;
 
@@ -8,15 +8,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-// TODO should implement a generic GameLogicService interface
 @Service
-public class ChessLogicService {
+public final class ChessLogicService {
 
-    // TODO can demonstrate the singleton pattern here
-    private ChessGame chessGame = new ChessGame();
+    // TODO this is the singleton pattern
+    private ChessGame chessGame = ChessGame.getInstance();
 
+    // TODO this is a quick and improper way to reset the singleton object
+    // TODO correct way would be to actually reset individual ChessGame instance fields
+    // TODO rather than constructing a new ChessGame reference (defeating the point of singleton)
     public ChessGame getNewGame() {
-        chessGame = new ChessGame();
+        chessGame.resetGame();
+        chessGame = ChessGame.getInstance();
         return chessGame;
     }
 
