@@ -40,7 +40,7 @@ public class Coordinate {
         return this.row < ROW_COUNT && this.row >= 0 && this.col < COL_COUNT && this.col >= 0;
     }
 
-    // TODO this is the prototype creational pattern
+    // PATTERN this is the prototype pattern
     public Coordinate copy() {
         return new Coordinate(this.row, this.col);
     }

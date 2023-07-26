@@ -5,6 +5,7 @@ import com.shank.chess.strategy.MoveCalculator;
 import java.util.ArrayList;
 import java.util.List;
 
+// PATTERN this is the observer pattern's publisher
 public class ChessMovePublisher implements IPublisher<MoveCalculator> {
     private List<ISubscriber<MoveCalculator>> subscriberList = new ArrayList<>();
 

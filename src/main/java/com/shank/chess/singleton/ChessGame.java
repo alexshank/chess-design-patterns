@@ -10,7 +10,7 @@ import java.util.*;
 
 public final class ChessGame {
 
-    // TODO this is the singleton pattern
+    // PATTERN this is the singleton pattern
     // TODO this is a naive implementation that is NOT thread safe (no locking, race conditions)
     private static ChessGame instance;
 
@@ -19,7 +19,7 @@ public final class ChessGame {
     private Optional<Coordinate> selectedCoordinate;
     private boolean whiteToMove;
 
-    // TODO we hold a publisher object to orchestrate events to subscribers
+    // PATTERN this is part of the observer pattern
     private ChessMovePublisher movePublisher;
 
     private ChessGame() {
@@ -33,7 +33,6 @@ public final class ChessGame {
         this.movePublisher = new ChessMovePublisher();
         this.whiteToMove = true;
 
-        // TODO this is probably prime use case for abstract factory
         // starting positions for a game of chess
         this.pieces.put(new Coordinate(0, 0), new ChessPiece("WC"));
         this.pieces.put(new Coordinate(0, 1), new ChessPiece("WN"));
@@ -70,7 +69,7 @@ public final class ChessGame {
         this.pieces.put(new Coordinate(6, 7), createPawnChessPiece("BP"));
     }
 
-    // add each PawnMoveCalculator to the ChessGame's subscriber list
+    // PATTERN observer subscriptions - add each PawnMoveCalculator to the ChessGame's subscriber list
     // TODO perhaps a better way to avoid this unchecked casting
     private ChessPiece createPawnChessPiece(String label) {
         ChessPiece pawnChessPiece = new ChessPiece(label);
@@ -78,7 +77,7 @@ public final class ChessGame {
         return pawnChessPiece;
     }
 
-    // TODO consistent access to a single instance of this class
+    // PATTERN this is the singleton pattern
     public static ChessGame getInstance(){
         if(instance == null){
             instance = new ChessGame();
@@ -86,6 +85,9 @@ public final class ChessGame {
         return instance;
     }
 
+    /*
+     * Getters and Setters
+     */
     public void resetGame(){
         instance.initializeGame();
     }
@@ -118,6 +120,9 @@ public final class ChessGame {
         this.highlights = highlights;
     }
 
+    /*
+     * Helper functions
+     */
     public boolean isVacantSquare(Coordinate coordinate) {
         return !this.pieces.containsKey(coordinate);
     }
@@ -136,6 +141,7 @@ public final class ChessGame {
         this.getPieces().remove(end);
         this.getPieces().put(end, movingPiece);
 
+        // PATTERN this is the observer pattern
         // publish event saying a piece was moved
         this.movePublisher.notifySubscribers(movingPiece.getMoveCalculator());
 

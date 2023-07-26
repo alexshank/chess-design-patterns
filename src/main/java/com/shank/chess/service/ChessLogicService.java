@@ -11,7 +11,7 @@ import java.util.Optional;
 @Service
 public final class ChessLogicService {
 
-    // TODO this is the singleton pattern
+    // PATTERN this is the singleton pattern
     private ChessGame chessGame = ChessGame.getInstance();
 
     public ChessGame getNewGame() {
@@ -19,6 +19,7 @@ public final class ChessLogicService {
         return chessGame;
     }
 
+    // TODO should clean up this logic
     public ChessGame handleBoardSquareClick(Coordinate coordinate) {
         // do nothing if a piece that cannot be moved (not its turn) is clicked
         if(chessGame.getPieces().get(coordinate) != null && chessGame.getPieces().get(coordinate).isWhitePiece() != chessGame.isWhiteToMove()) {

@@ -4,7 +4,8 @@ import com.shank.chess.strategy.*;
 
 public class ChessPiece {
     private String label;
-    // TODO this is the strategy pattern. A form of composition, which is an alternative to inheritance
+    // PATTERN this is the strategy pattern. A form of composition, which is an alternative to inheritance
+    // PATTERN we could have alternatively created subclasses of ChessPiece that had different calculateMoves implementations
     private MoveCalculator moveCalculator;
     private boolean isWhitePiece;
 

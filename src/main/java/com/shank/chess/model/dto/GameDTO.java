@@ -16,6 +16,8 @@ public class GameDTO {
         this.highlights = chessGame.getHighlights();
         this.selected = chessGame.getSelectedCoordinate().orElseGet(() -> null);
         this.whiteToMove = chessGame.isWhiteToMove();
+
+        // PATTERN this implicitly is using the iterator pattern to go through a collection we don't know the implementation of
         this.pieces = chessGame.getPieces().entrySet().stream()
                 .map(entry -> new PieceDTO(entry.getValue().getLabel(), entry.getKey().getRow(), entry.getKey().getCol()))
                 .collect(Collectors.toList());

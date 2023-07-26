@@ -48,8 +48,8 @@ public class PawnMoveCalculator extends MoveCalculator implements ISubscriber<Mo
         return calculatedMoves.stream().filter(Coordinate::isWithinBoard).collect(Collectors.toList());
     }
 
-    // TODO this is the subscriber pattern
-    // TODO we turned this move calculator into a subscriber, so it can update it's behavior when needed
+    // PATTERN this is the subscriber of the observer pattern
+    // we turned this move calculator into a subscriber, so it can update its behavior when needed
     @Override
     public void update(MoveCalculator event) {
         // if we get an event containing this exact move calculator (reference equality),

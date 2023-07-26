@@ -10,7 +10,6 @@ import java.util.stream.Collectors;
 
 public class KnightMoveCalculator extends MoveCalculator {
 
-    // TODO should clean up this logic
     @Override
     public List<Coordinate> calculatePotentialMoves(Coordinate coordinate, Map<Coordinate, ChessPiece> pieces) {
         List<Coordinate> calculatedMoves = new ArrayList();
@@ -28,7 +27,6 @@ public class KnightMoveCalculator extends MoveCalculator {
             }
         }
 
-        // TODO could be static method in base abstract class
         return calculatedMoves.stream().filter(Coordinate::isWithinBoard).collect(Collectors.toList());
     }
 }

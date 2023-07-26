@@ -14,6 +14,7 @@ public class ChessController {
     @Autowired
     private ChessLogicService chessLogicService;
 
+    // PATTERN this is the decorator pattern through syntactic sugar and Spring library
     @GetMapping("/ping")
     public String ping() {
         return "Service is healthy.";
