@@ -3,23 +3,29 @@ package com.shank.chess.singleton;
 import com.shank.chess.model.ChessPiece;
 import com.shank.chess.model.Coordinate;
 import com.shank.chess.observer.ChessMovePublisher;
+import com.shank.chess.observer.ISubscriber;
 import com.shank.chess.strategy.*;
 
 import java.util.*;
 
-// TODO could demo builder pattern with this class
 public final class ChessGame {
 
     // TODO this is the singleton pattern
-    // TODO this is a naive implementation that is NOT thread safe
+    // TODO this is a naive implementation that is NOT thread safe (no locking, race conditions)
     private static ChessGame instance;
 
     private Map<Coordinate, ChessPiece> pieces;
     private List<Coordinate> highlights;
     private Optional<Coordinate> selectedCoordinate;
+
+    // TODO we hold a publisher object to orchestrate events to subscribers
     private ChessMovePublisher movePublisher;
 
     private ChessGame() {
+        initializeGame();
+    }
+
+    private void initializeGame() {
         this.pieces = new HashMap<>();
         this.highlights = new ArrayList<>();
         this.selectedCoordinate = Optional.empty();
@@ -27,42 +33,47 @@ public final class ChessGame {
 
         // TODO this is probably prime use case for abstract factory
         // starting positions for a game of chess
-        this.pieces.put(new Coordinate(0, 0), new ChessPiece("WC", new CastleMoveCalculator()));
-        this.pieces.put(new Coordinate(0, 1), new ChessPiece("WN", new KnightMoveCalculator()));
-        this.pieces.put(new Coordinate(0, 2), new ChessPiece("WB", new BishopMoveCalculator()));
-        this.pieces.put(new Coordinate(0, 3), new ChessPiece("WQ", new QueenMoveCalculator()));
-        this.pieces.put(new Coordinate(0, 4), new ChessPiece("WK", new KingMoveCalculator()));
-        this.pieces.put(new Coordinate(0, 5), new ChessPiece("WB", new BishopMoveCalculator()));
-        this.pieces.put(new Coordinate(0, 6), new ChessPiece("WN", new KnightMoveCalculator()));
-        this.pieces.put(new Coordinate(0, 7), new ChessPiece("WC", new CastleMoveCalculator()));
-        this.pieces.put(new Coordinate(7, 0), new ChessPiece("BC", new CastleMoveCalculator()));
-        this.pieces.put(new Coordinate(7, 1), new ChessPiece("BN", new KnightMoveCalculator()));
-        this.pieces.put(new Coordinate(7, 2), new ChessPiece("BB", new BishopMoveCalculator()));
-        this.pieces.put(new Coordinate(7, 3), new ChessPiece("BQ", new QueenMoveCalculator()));
-        this.pieces.put(new Coordinate(7, 4), new ChessPiece("BK", new KingMoveCalculator()));
-        this.pieces.put(new Coordinate(7, 5), new ChessPiece("BB", new BishopMoveCalculator()));
-        this.pieces.put(new Coordinate(7, 6), new ChessPiece("BN", new KnightMoveCalculator()));
-        this.pieces.put(new Coordinate(7, 7), new ChessPiece("BC", new CastleMoveCalculator()));
+        this.pieces.put(new Coordinate(0, 0), new ChessPiece("WC"));
+        this.pieces.put(new Coordinate(0, 1), new ChessPiece("WN"));
+        this.pieces.put(new Coordinate(0, 2), new ChessPiece("WB"));
+        this.pieces.put(new Coordinate(0, 3), new ChessPiece("WQ"));
+        this.pieces.put(new Coordinate(0, 4), new ChessPiece("WK"));
+        this.pieces.put(new Coordinate(0, 5), new ChessPiece("WB"));
+        this.pieces.put(new Coordinate(0, 6), new ChessPiece("WN"));
+        this.pieces.put(new Coordinate(0, 7), new ChessPiece("WC"));
+        this.pieces.put(new Coordinate(7, 0), new ChessPiece("BC"));
+        this.pieces.put(new Coordinate(7, 1), new ChessPiece("BN"));
+        this.pieces.put(new Coordinate(7, 2), new ChessPiece("BB"));
+        this.pieces.put(new Coordinate(7, 3), new ChessPiece("BQ"));
+        this.pieces.put(new Coordinate(7, 4), new ChessPiece("BK"));
+        this.pieces.put(new Coordinate(7, 5), new ChessPiece("BB"));
+        this.pieces.put(new Coordinate(7, 6), new ChessPiece("BN"));
+        this.pieces.put(new Coordinate(7, 7), new ChessPiece("BC"));
         // pawns
-        this.pieces.put(new Coordinate(1, 0), new ChessPiece("WP", new PawnMoveCalculator(true)));
-        this.pieces.put(new Coordinate(1, 1), new ChessPiece("WP", new PawnMoveCalculator(true)));
-        this.pieces.put(new Coordinate(1, 2), new ChessPiece("WP", new PawnMoveCalculator(true)));
-        this.pieces.put(new Coordinate(1, 3), new ChessPiece("WP", new PawnMoveCalculator(true)));
-        // TODO refactor to build subscriptions better (probably in the abstract factory)
-        PawnMoveCalculator tempMoveCalculator = new PawnMoveCalculator(true);
-        this.movePublisher.subscribe(tempMoveCalculator);
-        this.pieces.put(new Coordinate(1, 4), new ChessPiece("WP", tempMoveCalculator));
-        this.pieces.put(new Coordinate(1, 5), new ChessPiece("WP", new PawnMoveCalculator(true)));
-        this.pieces.put(new Coordinate(1, 6), new ChessPiece("WP", new PawnMoveCalculator(true)));
-        this.pieces.put(new Coordinate(1, 7), new ChessPiece("WP", new PawnMoveCalculator(true)));
-        this.pieces.put(new Coordinate(6, 0), new ChessPiece("BP", new PawnMoveCalculator(false)));
-        this.pieces.put(new Coordinate(6, 1), new ChessPiece("BP", new PawnMoveCalculator(false)));
-        this.pieces.put(new Coordinate(6, 2), new ChessPiece("BP", new PawnMoveCalculator(false)));
-        this.pieces.put(new Coordinate(6, 3), new ChessPiece("BP", new PawnMoveCalculator(false)));
-        this.pieces.put(new Coordinate(6, 4), new ChessPiece("BP", new PawnMoveCalculator(false)));
-        this.pieces.put(new Coordinate(6, 5), new ChessPiece("BP", new PawnMoveCalculator(false)));
-        this.pieces.put(new Coordinate(6, 6), new ChessPiece("BP", new PawnMoveCalculator(false)));
-        this.pieces.put(new Coordinate(6, 7), new ChessPiece("BP", new PawnMoveCalculator(false)));
+        this.pieces.put(new Coordinate(1, 0), createPawnChessPiece("WP"));
+        this.pieces.put(new Coordinate(1, 1), createPawnChessPiece("WP"));
+        this.pieces.put(new Coordinate(1, 2), createPawnChessPiece("WP"));
+        this.pieces.put(new Coordinate(1, 3), createPawnChessPiece("WP"));
+        this.pieces.put(new Coordinate(1, 4), createPawnChessPiece("WP"));
+        this.pieces.put(new Coordinate(1, 5), createPawnChessPiece("WP"));
+        this.pieces.put(new Coordinate(1, 6), createPawnChessPiece("WP"));
+        this.pieces.put(new Coordinate(1, 7), createPawnChessPiece("WP"));
+        this.pieces.put(new Coordinate(6, 0), createPawnChessPiece("BP"));
+        this.pieces.put(new Coordinate(6, 1), createPawnChessPiece("BP"));
+        this.pieces.put(new Coordinate(6, 2), createPawnChessPiece("BP"));
+        this.pieces.put(new Coordinate(6, 3), createPawnChessPiece("BP"));
+        this.pieces.put(new Coordinate(6, 4), createPawnChessPiece("BP"));
+        this.pieces.put(new Coordinate(6, 5), createPawnChessPiece("BP"));
+        this.pieces.put(new Coordinate(6, 6), createPawnChessPiece("BP"));
+        this.pieces.put(new Coordinate(6, 7), createPawnChessPiece("BP"));
+    }
+
+    // add each PawnMoveCalculator to the ChessGame's subscriber list
+    // TODO perhaps a better way to avoid this unchecked casting
+    private ChessPiece createPawnChessPiece(String label) {
+        ChessPiece pawnChessPiece = new ChessPiece(label);
+        this.movePublisher.subscribe((ISubscriber<MoveCalculator>) pawnChessPiece.getMoveCalculator());
+        return pawnChessPiece;
     }
 
     // TODO consistent access to a single instance of this class
@@ -73,9 +84,8 @@ public final class ChessGame {
         return instance;
     }
 
-    // TODO this is quick and improper way to reset the singleton
     public void resetGame(){
-        instance = null;
+        instance.initializeGame();
     }
 
     public Map<Coordinate, ChessPiece> getPieces() {

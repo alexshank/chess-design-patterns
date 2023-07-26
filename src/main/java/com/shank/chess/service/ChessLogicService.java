@@ -14,12 +14,8 @@ public final class ChessLogicService {
     // TODO this is the singleton pattern
     private ChessGame chessGame = ChessGame.getInstance();
 
-    // TODO this is a quick and improper way to reset the singleton object
-    // TODO correct way would be to actually reset individual ChessGame instance fields
-    // TODO rather than constructing a new ChessGame reference (defeating the point of singleton)
     public ChessGame getNewGame() {
         chessGame.resetGame();
-        chessGame = ChessGame.getInstance();
         return chessGame;
     }
 
